@@ -43,7 +43,7 @@ def get_single_entry(id):
             e.entry,
             e.date,
             e.mood_id
-            FROM entry as e
+            FROM ntry as e
             WHERE e.id = ?
         """
         ,( id, ))
@@ -53,3 +53,14 @@ def get_single_entry(id):
         entry = Entry(data['id'], data['concept'], data['entry'], data['date'], data['mood_id'])
 
         return json.dumps(entry.__dict__)
+
+def delete_entry(id):
+    with sqlite3.connect("./dailyjournal.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM entry
+        WHERE id = ?
+        """,
+        (id,))
+
