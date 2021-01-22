@@ -16,8 +16,8 @@ def get_all_entries():
             e.entry,
             e.date,
             e.mood_id,
-            m.label mood_label
-        FROM entry e
+            m.label mood_label 
+        FROM Entry e
         JOIN Mood m
             ON m.id = e.mood_id 
         """
@@ -31,7 +31,7 @@ def get_all_entries():
 
             entry = Entry(row["id"], row["concept"], row["entry"], row["date"], row["mood_id"])
 
-            mood = Mood(row["label"])
+            mood = Mood(row["mood_id"], row["mood_label"])
 
             entry.mood = mood.__dict__
 
