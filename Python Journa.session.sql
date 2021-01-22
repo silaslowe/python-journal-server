@@ -27,4 +27,15 @@ WHERE `entry` LIKE "%React%";
 SELECT id, label
 FROM Mood
 
+SELECT
+    e.id,
+    e.concept,
+    e.entry,
+    e.date,
+    e.mood_id,
+    m.label mood_label
+FROM entry e
+JOIN Mood m
+    ON m.id = e.mood_id 
+
 
