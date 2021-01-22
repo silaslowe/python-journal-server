@@ -102,3 +102,19 @@ def delete_entry(id):
         """,
         (id,))
 
+def create_entry(new_entry):
+    with sqlite3.connect("./dailyjournal.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Entry 
+            (concept, entry, date, mood_id) 
+        VALUES
+            (?,?,?,?);       
+        """, (new_entry["concept"], new_entry["entry"],new_entry["date"], new_entry["moodId"],))
+
+        id = db_cursor.lastrowid
+
+        new_entry["id"] = id
+
+    return json.dumps(new_entry)
