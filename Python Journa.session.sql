@@ -20,3 +20,11 @@ INSERT INTO `Mood` VALUES (null, "Morose");
 INSERT INTO `Mood` VALUES (null, "Unwell");
 INSERT INTO `Mood` VALUES (null, "Frustrated");
 
+SELECT id, concept, `entry`, `date`, mood_id
+FROM `Entry`
+WHERE `entry` LIKE "%React%";
+
+SELECT id, label
+FROM Mood
+
+
