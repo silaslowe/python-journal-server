@@ -6,5 +6,6 @@
             "name": "Python Journa",
             "database": "dailyjournal.db"
         }
-    ]
+    ],
+    "python.pythonPath": "/Users/silaslowe/.local/share/virtualenvs/daily-journal-server-Ok2klHhP/bin/python"
 }
