@@ -74,9 +74,12 @@ def get_all_searched_entries(search_term):
             e.concept,
             e.entry,
             e.date,
-            e.mood_id
-            FROM entry as e
-            WHERE entry LIKE ?
+            e.mood_id,
+            m.label mood_label 
+        FROM Entry e
+        JOIN Mood m
+            ON m.id = e.mood_id
+        WHERE entry LIKE ?
         """,("%"+search_term+"%",)
         )
 
@@ -87,6 +90,10 @@ def get_all_searched_entries(search_term):
         for row in dataset:
 
             entry = Entry(row["id"], row["concept"], row["entry"], row["date"], row["mood_id"])
+
+            mood = Mood(row["mood_id"], row["mood_label"])
+
+            entry.mood = mood.__dict__
 
             entries.append(entry.__dict__)
         
@@ -118,3 +125,26 @@ def create_entry(new_entry):
         new_entry["id"] = id
 
     return json.dumps(new_entry)
+
+def update_entry(id, new_entry):
+    with sqlite3.connect("./dailyjournal.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Entry
+            SET
+                concept = ?,
+                entry = ?,
+                date = ?,
+                mood_id = ?
+        WHERE id = ?
+        """, (new_entry["id"], new_entry["concept"], new_entry["entry"],new_entry["date"], new_entry["moodId"],))
+
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        return False
+    else: 
+        return True
+
+
