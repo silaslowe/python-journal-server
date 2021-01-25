@@ -2,7 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from sqlite3.dbapi2 import PARSE_DECLTYPES
 
-from entries import get_all_entries, get_single_entry,delete_entry, get_all_searched_entries
+from entries import get_all_entries, get_single_entry,delete_entry, get_all_searched_entries, create_entry, update_entry
 from moods import get_all_moods
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -86,6 +86,48 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_entry(id)
 
         self.wfile.write("".encode())
+
+    def do_POST(self):
+        self._set_headers(201)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+
+        # Convert JSON string to a Python dictionary
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Initialize new animal
+        new_entry = None
+
+        # Add a new animal to the list. Don't worry about
+        # the orange squiggle, you'll define the create_animal
+        # function next.
+        if resource == "entries":
+            new_entry = create_entry(post_body)
+
+        self.wfile.write(f"{new_entry}".encode())
+
+    def do_PUT(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        if resource == "entries":
+            success = update_entry(id, post_body)
+
+        if success:
+            self._set_headers(204)
+        else: 
+            self._set_headers(404)
+
+        self.wfile.write("".encode())
+        
 def main():
     host = ''
     port = 8088
