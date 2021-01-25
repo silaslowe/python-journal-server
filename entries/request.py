@@ -138,7 +138,7 @@ def update_entry(id, new_entry):
                 date = ?,
                 mood_id = ?
         WHERE id = ?
-        """, (new_entry["id"], new_entry["concept"], new_entry["entry"],new_entry["date"], new_entry["moodId"],))
+        """, ( new_entry["concept"], new_entry["entry"],new_entry["date"], new_entry["moodId"], id,))
 
         rows_affected = db_cursor.rowcount
 
